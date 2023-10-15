@@ -24,7 +24,7 @@ impl Backfill {
             .await?
             .job_run_id
             .ok_or(anyhow!("Job run ID is missing"))?;
-        return self.poll_job_status(&job_run_id).await;
+        self.poll_job_status(&job_run_id).await
     }
 
     async fn start_job(&self, run_date: &str) -> Result<StartJobRunOutput> {
@@ -40,18 +40,18 @@ impl Backfill {
             }
         }
         let out = builder.send().await?;
-        return Ok(out);
+        Ok(out)
     }
 
     async fn get_job_run(&self, job_run_id: &str) -> Result<Option<JobRun>> {
-        return Ok(self
+        Ok(self
             .client
             .get_job_run()
             .job_name(&self.args.name)
             .run_id(job_run_id)
             .send()
             .await?
-            .job_run);
+            .job_run)
     }
 
     #[async_recursion(?Send)]

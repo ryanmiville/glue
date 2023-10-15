@@ -28,5 +28,5 @@ fn dates(start: NaiveDate, end: NaiveDate) -> Vec<String> {
         .map(|days| start + Duration::days(days))
         .map(|date| date.format("%Y-%m-%d").to_string())
         .collect();
-    return dates;
+    dates
 }

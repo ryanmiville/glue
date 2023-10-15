@@ -24,7 +24,7 @@ impl Args {
                 msg.push_str(&format!(" {}: {}\n", arg, value));
             }
         }
-        return msg;
+        msg
     }
 }
 pub fn start() -> Result<Args> {
@@ -60,7 +60,7 @@ pub fn start() -> Result<Args> {
         end_date: end,
         additional_args: additional,
     };
-    return Ok(args);
+    Ok(args)
 }
 
 pub fn spinner(message: String) -> ProgressBar {
@@ -70,7 +70,7 @@ pub fn spinner(message: String) -> ProgressBar {
     );
     spinner.set_message(message);
     spinner.enable_steady_tick(Duration::from_millis(100));
-    return spinner;
+    spinner
 }
 
 fn arg_name_validator(input: &str) -> Result<Validation, CustomUserError> {
@@ -82,7 +82,7 @@ fn arg_name_validator(input: &str) -> Result<Validation, CustomUserError> {
 }
 
 fn contains_space_validator(input: &str) -> Result<Validation, CustomUserError> {
-    if input.contains(" ") {
+    if input.contains(' ') {
         Ok(Validation::Valid)
     } else {
         Ok(Validation::Invalid("missing arg value".into()))
