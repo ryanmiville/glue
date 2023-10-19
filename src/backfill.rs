@@ -2,23 +2,39 @@ use anyhow::{anyhow, bail, Result};
 use async_recursion::async_recursion;
 use aws_sdk_glue::operation::start_job_run::StartJobRunOutput;
 use aws_sdk_glue::types::{JobRun, JobRunState};
+use chrono::NaiveDate;
 
 use std::time::Duration;
 use tokio::time::sleep;
 
-use crate::tui;
+mod tui;
 
-pub struct Backfill {
+pub async fn run() -> Result<()> {
+    let args = tui::start()?;
+    let config = aws_config::load_from_env().await;
+    let client = aws_sdk_glue::Client::new(&config);
+
+    let dates = dates(args.start_date, args.end_date);
+    let backfill = Backfill::new(client, args.clone());
+    for date in dates {
+        let spinner = tui::spinner(args.message(&date));
+        backfill.run(&date).await?;
+        spinner.finish_with_message(format!("{date} backfill successful"));
+    }
+    Ok(())
+}
+
+struct Backfill {
     client: aws_sdk_glue::Client,
     args: tui::Args,
 }
 
 impl Backfill {
-    pub fn new(client: aws_sdk_glue::Client, args: tui::Args) -> Self {
+    fn new(client: aws_sdk_glue::Client, args: tui::Args) -> Self {
         Self { client, args }
     }
 
-    pub async fn run(&self, run_date: &str) -> Result<()> {
+    async fn run(&self, run_date: &str) -> Result<()> {
         let job_run_id = self
             .start_job(run_date)
             .await?
@@ -77,4 +93,13 @@ impl Backfill {
             _ => return Ok(()),
         }
     }
+}
+
+fn dates(start: NaiveDate, end: NaiveDate) -> Vec<String> {
+    let num_days = end.signed_duration_since(start).num_days();
+    let dates: Vec<String> = (0..=num_days)
+        .map(|days| start + chrono::Duration::days(days))
+        .map(|date| date.format("%Y-%m-%d").to_string())
+        .collect();
+    dates
 }
