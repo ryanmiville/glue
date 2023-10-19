@@ -27,6 +27,7 @@ impl Args {
         msg
     }
 }
+
 pub fn start() -> Result<Args> {
     let start = DateSelect::new("Start date:").prompt()?;
     let end = DateSelect::new("End date:").with_min_date(start).prompt()?;

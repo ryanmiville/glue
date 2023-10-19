@@ -1,5 +1,5 @@
 [package]
-name = "glue_backfill"
+name = "glue"
 version = "0.1.0"
 edition = "2021"
 
@@ -11,6 +11,7 @@ async-recursion = "1.0.5"
 aws-config = "0.56.1"
 aws-sdk-glue = "0.33.0"
 chrono = "0.4.31"
+clap = { version = "4.4.6", features = ["derive"] }
 indicatif = "0.17.7"
 inquire = { version = "0.6.2", features = ["date"] }
 tokio = { version = "1.32.0", features = ["full"] }

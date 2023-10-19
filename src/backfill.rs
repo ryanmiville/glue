@@ -6,15 +6,15 @@ use aws_sdk_glue::types::{JobRun, JobRunState};
 use std::time::Duration;
 use tokio::time::sleep;
 
-use crate::cli;
+use crate::tui;
 
 pub struct Backfill {
     client: aws_sdk_glue::Client,
-    args: cli::Args,
+    args: tui::Args,
 }
 
 impl Backfill {
-    pub fn new(client: aws_sdk_glue::Client, args: cli::Args) -> Self {
+    pub fn new(client: aws_sdk_glue::Client, args: tui::Args) -> Self {
         Self { client, args }
     }
 
