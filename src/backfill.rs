@@ -10,10 +10,10 @@ use tokio::time::sleep;
 mod tui;
 
 pub async fn run() -> Result<()> {
-    let args = tui::start()?;
     let config = aws_config::load_from_env().await;
     let client = aws_sdk_glue::Client::new(&config);
-
+    let jobs = get_all_job_names(&client).await?;
+    let args = tui::start(jobs)?;
     let dates = dates(args.start_date, args.end_date);
     let backfill = Backfill::new(client, args.clone());
     for date in dates {
@@ -102,4 +102,37 @@ fn dates(start: NaiveDate, end: NaiveDate) -> Vec<String> {
         .map(|date| date.format("%Y-%m-%d").to_string())
         .collect();
     dates
+}
+
+async fn get_all_job_names(client: &aws_sdk_glue::Client) -> Result<Vec<String>> {
+    let jobs = get_all_jobs(&client).await?;
+    let names = jobs
+        .iter()
+        .flat_map(|job| job.name.clone())
+        .collect::<Vec<_>>();
+    Ok(names)
+}
+
+async fn get_all_jobs(
+    client: &aws_sdk_glue::Client,
+) -> Result<Vec<aws_sdk_glue::types::Job>, aws_sdk_glue::Error> {
+    let mut jobs = Vec::new();
+    let mut next_token = None;
+
+    loop {
+        let mut request = client.get_jobs();
+        if let Some(token) = next_token {
+            request = request.next_token(token);
+        }
+        let response = request.send().await?;
+        jobs.extend(response.jobs.unwrap_or_default());
+
+        if let Some(token) = response.next_token {
+            next_token = Some(token);
+        } else {
+            break;
+        }
+    }
+
+    Ok(jobs)
 }

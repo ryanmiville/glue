@@ -4,7 +4,7 @@ use anyhow::Result;
 use chrono::NaiveDate;
 use indicatif::{ProgressBar, ProgressStyle};
 use inquire::validator::Validation;
-use inquire::{CustomUserError, DateSelect, Text};
+use inquire::{CustomUserError, DateSelect, Select, Text};
 
 #[derive(Debug, Clone)]
 pub struct Args {
@@ -28,10 +28,10 @@ impl Args {
     }
 }
 
-pub fn start() -> Result<Args> {
+pub fn start(jobs: Vec<String>) -> Result<Args> {
     let start = DateSelect::new("Start date:").prompt()?;
     let end = DateSelect::new("End date:").with_min_date(start).prompt()?;
-    let name = Text::new("Job name:").prompt()?;
+    let name = Select::new("Select a Glue job:", jobs).prompt()?;
     let date_arg_name = Text::new("Name of date arg:")
         .with_default("--date")
         .with_validator(arg_name_validator)
