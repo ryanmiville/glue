@@ -47,7 +47,7 @@ async fn list_roles(client: aws_sdk_iam::Client) -> Result<Vec<String>> {
 async fn create_notebook(args: &tui::Args) -> Result<()> {
     let contents = TEMPLATE.replace("IAM_ROLE_ARN", args.role.as_str());
     let fname = format!("{}.ipynb", args.name);
-    let mut file = File::create(&fname)?;
+    let mut file = File::create(fname)?;
     file.write_all(contents.as_bytes())?;
     Ok(())
 }

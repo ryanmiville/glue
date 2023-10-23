@@ -105,7 +105,7 @@ fn dates(start: NaiveDate, end: NaiveDate) -> Vec<String> {
 }
 
 async fn get_all_job_names(client: &aws_sdk_glue::Client) -> Result<Vec<String>> {
-    let jobs = get_all_jobs(&client).await?;
+    let jobs = get_all_jobs(client).await?;
     let names = jobs
         .iter()
         .flat_map(|job| job.name.clone())
