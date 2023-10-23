@@ -10,6 +10,7 @@ anyhow = "1.0.75"
 async-recursion = "1.0.5"
 aws-config = "0.56.1"
 aws-sdk-glue = "0.33.0"
+aws-sdk-iam = "0.33.0"
 chrono = "0.4.31"
 clap = { version = "4.4.6", features = ["derive"] }
 indicatif = "0.17.7"
