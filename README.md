@@ -1,8 +1,6 @@
 # Glue
 
-This is a simple CLI to interact with glue jobs.
-
-At the time, it has one command: `glue backfill`. It will run a glue job for each day between a start and end date.
+This is a simple CLI to interact with AWS Glue services.
 
 ## Prerequisites
 
