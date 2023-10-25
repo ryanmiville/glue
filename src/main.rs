@@ -5,22 +5,29 @@ mod notebook;
 
 /// A CLI for interacting with AWS Glue jobs
 #[derive(Parser)]
-pub struct Cli {
+struct Cli {
+    /// Optional AWS profile name to use
+    #[arg(short, long)]
+    profile: Option<String>,
+
     #[clap(subcommand)]
-    pub command: Commands,
+    command: Commands,
 }
 
 #[derive(Subcommand)]
 pub enum Commands {
-    /// run a backfill for a given date range
+    /// Run a backfill for a given date range
     Backfill,
-    /// create a new jupyter notebook connected to a Glue interactive session
+    /// Create a new jupyter notebook connected to a Glue interactive session
     Notebook,
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let cmd = Cli::parse();
+    if let Some(profile) = cmd.profile {
+        std::env::set_var("AWS_PROFILE", profile);
+    }
     match &cmd.command {
         Commands::Backfill => backfill::run().await,
         Commands::Notebook => notebook::run().await,
