@@ -10,7 +10,7 @@ You have AWS credentials configured in your environment. See [here](https://docs
 
 ## Usage
 
-```sh
+```
 glue --help
 A CLI for interacting with AWS Glue jobs
 
