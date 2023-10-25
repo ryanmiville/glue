@@ -18,7 +18,7 @@ struct Cli {
 pub enum Commands {
     /// Run a backfill for a given date range
     Backfill,
-    /// Create a new jupyter notebook connected to a Glue interactive session
+    /// Create a new jupyter notebook configured for a Glue interactive session
     Notebook,
 }
 

@@ -1,14 +1,27 @@
 # Glue
 
-This is a simple CLI to interact with glue jobs. 
+This is a simple CLI to interact with glue jobs.
 
 At the time, it has one command: `glue backfill`. It will run a glue job for each day between a start and end date.
 
 ## Prerequisites
 
-You have the AWS CLI installed and your default profile has access to the Glue job.
+You have AWS credentials configured in your environment. See [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html) for more information.
 
 ## Usage
 
-Here's an example using a fake job for the sake of time. (use `glue backfill` instead of `glue_backfill`)
-![Glue Backfill](demo.gif)
+```sh
+glue --help
+A CLI for interacting with AWS Glue jobs
+
+Usage: glue [OPTIONS] <COMMAND>
+
+Commands:
+  backfill  Run a backfill for a given date range
+  notebook  Create a new jupyter notebook configured for a Glue interactive session
+  help      Print this message or the help of the given subcommand(s)
+
+Options:
+  -p, --profile <PROFILE>  Optional AWS profile name to use
+  -h, --help               Print help
+```
