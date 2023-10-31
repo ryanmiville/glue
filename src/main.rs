@@ -2,6 +2,7 @@ use anyhow::Result;
 use clap::{Parser, Subcommand};
 mod backfill;
 mod notebook;
+mod run;
 
 /// A CLI for interacting with AWS Glue jobs
 #[derive(Parser)]
@@ -16,6 +17,8 @@ struct Cli {
 
 #[derive(Subcommand)]
 pub enum Commands {
+    /// Run a Glue job
+    Run,
     /// Run a backfill for a given date range
     Backfill,
     /// Create a new jupyter notebook configured for a Glue interactive session
@@ -31,5 +34,6 @@ async fn main() -> Result<()> {
     match &cmd.command {
         Commands::Backfill => backfill::run().await,
         Commands::Notebook => notebook::run().await,
+        Commands::Run => run::run().await,
     }
 }
